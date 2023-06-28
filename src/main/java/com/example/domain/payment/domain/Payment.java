@@ -19,22 +19,23 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long payCode;
+    @Column(name = "pay_id")
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    private PaymentType payType;
+    private PaymentType payment;
 
-    private LocalDateTime payTime;
-    private double payAmount;
-    private String payStatus;
-    private LocalDateTime payCanceltime;
+    private LocalDateTime time;
+    private double amount;
+    private String status;
+    private LocalDateTime cancelPayment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_code", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_code" , foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "schedule_id" , foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Schedule schedule;
 
 

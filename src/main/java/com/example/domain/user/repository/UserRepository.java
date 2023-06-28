@@ -7,11 +7,8 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-
     // Id 중복 체크
-    boolean existsUserByUserId(String userId);
+    Optional<User> findByMail(String mail);
 
-    // PK(Long) 이 아닌 String(ID)로 로그인 해서 메서드를 만듬
-    Optional<User> findByUserId(String userId);
 
 }

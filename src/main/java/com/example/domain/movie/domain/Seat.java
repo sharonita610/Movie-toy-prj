@@ -15,10 +15,12 @@ import javax.persistence.*;
 public class Seat {
 
     @Id
+    @Column(name = "seat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seatCode;
+    private Long id;
 
-    private String seatName;
+    @Column(name = "seat_name")
+    private String name;
 
 
 }

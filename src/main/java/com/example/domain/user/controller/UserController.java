@@ -1,11 +1,11 @@
 package com.example.domain.user.controller;
 
-import com.example.domain.user.domain.request.LoginRequestDTO;
-import com.example.domain.user.domain.request.MyPageChangeInfoRequestDTO;
-import com.example.domain.user.domain.request.SignUpRequestDTO;
-import com.example.domain.user.domain.response.LoginResponseDTO;
-import com.example.domain.user.domain.response.MyPageResponseDTO;
-import com.example.domain.user.domain.response.SignUpResponseDTO;
+import com.example.domain.user.domain.request.LoginRequestDto;
+import com.example.domain.user.domain.request.UserUpdateRequestDto;
+import com.example.domain.user.domain.request.SignUpRequestDto;
+import com.example.domain.user.domain.response.LoginResponseDto;
+import com.example.domain.user.domain.response.UserDetailResponseDto;
+import com.example.domain.user.domain.response.SignUpResponseDto;
 import com.example.domain.user.service.UserService;
 import com.example.global.DuplicateIdException;
 import com.example.global.NoRegisteredArgumentsException;
@@ -16,19 +16,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.GeneratedValue;
-
 @RequiredArgsConstructor
 @RestController
 @Slf4j
-@RequestMapping("movieworld/users")
+@RequestMapping("users")
 public class UserController {
 
     private final UserService userService;
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Validated @RequestBody SignUpRequestDTO dto, BindingResult result) {
+    public ResponseEntity<?> signUp(@Validated @RequestBody SignUpRequestDto dto, BindingResult result) {
         log.info("movieworld/users/signup : POST 요청- {}", dto);
 
         if (result.hasErrors()) {
@@ -40,7 +38,7 @@ public class UserController {
 
         try {
 
-            SignUpResponseDTO signUpResponseDTO = userService.signUp(dto);
+            SignUpResponseDto signUpResponseDTO = userService.signUp(dto);
             return ResponseEntity.ok().body(signUpResponseDTO);
 
         } catch (NoRegisteredArgumentsException e) {
@@ -60,23 +58,23 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> signIn(@Validated @RequestBody LoginRequestDTO dto, BindingResult result){
+    public ResponseEntity<?> logIn(@Validated @RequestBody LoginRequestDto dto){
 
         log.info("movieworld/users/login : POST 요청 - {}", dto);
 
-        LoginResponseDTO logedIn = userService.logIn(dto);
+        LoginResponseDto logedIn = userService.logIn(dto);
 
         return ResponseEntity.ok().body(logedIn);
 
     }
 
     // 마이페이지
-    @GetMapping("/mypage/{usercode}")
-    public ResponseEntity<?> myPage(@PathVariable Long userCode){
+    @GetMapping("/{usercode}")
+    public ResponseEntity<?> userDetail(@PathVariable Long userCode){
 
         log.info("movieworld/users/mypage/{usercode} : GET 요청");
 
-        MyPageResponseDTO dto = userService.myPage(userCode);
+        UserDetailResponseDto dto = userService.userDetail(userCode);
 
         log.info("마이페이지 확인 시 리턴받는 dto - {}", dto);
 
@@ -84,19 +82,19 @@ public class UserController {
 
     }
 
-    @PatchMapping("/mypage/{usercode}")
-    public ResponseEntity<?> modifyMyInfo(@RequestBody MyPageChangeInfoRequestDTO dto, BindingResult result){
+    @PatchMapping("/{usercode}")
+    public ResponseEntity<?> userUpdate(@RequestBody UserUpdateRequestDto dto, BindingResult result){
 
         log.info("movieworld/users/mypage/{usercode} : PATCH 요청 - {}", dto);
 
-        userService.modifyMyInfo(dto);
+        userService.userUpdate(dto);
 
         return ResponseEntity.ok().body("");
 
     }
 
 
-    @DeleteMapping("mypage/{usercode}")
+    @DeleteMapping("{usercode}")
     public ResponseEntity<?> withdrawal(@PathVariable Long userCode){
 
         boolean flag = userService.withdrawal(userCode);

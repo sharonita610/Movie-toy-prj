@@ -2,6 +2,7 @@ package com.example.domain.user.domain.request;
 
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,11 +12,11 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Validated
 @Builder
-public class LoginRequestDTO {
+public class LoginRequestDto {
 
     @NotBlank
-    private String userId;
+    private String mail;
 
     @NotBlank
-    private String userPw;
+    private String password;
 }
