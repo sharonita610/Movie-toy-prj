@@ -3,10 +3,9 @@ package com.example.domain.user.service;
 import com.example.domain.user.domain.request.LoginRequestDTO;
 import com.example.domain.user.domain.request.SignUpRequestDTO;
 import com.example.domain.user.domain.response.LoginResponseDTO;
-import com.example.domain.user.domain.response.MyPageResponseDTO;
-import com.example.domain.user.domain.response.SignUpResponseDTO;
+import com.example.domain.user.domain.response.UserDetailResponseDto;
+import com.example.domain.user.domain.response.SignUpResponseDto;
 import com.example.global.DuplicateIdException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +64,7 @@ class UserServiceTest {
 
 
         // when
-        SignUpResponseDTO flag = userService.signUp(dto);
+        SignUpResponseDto flag = userService.signUp(dto);
 
         // then
         System.out.println("flag = " + flag);
@@ -103,7 +102,7 @@ class UserServiceTest {
 
 
         // when
-        MyPageResponseDTO dto = userService.myPage(id);
+        UserDetailResponseDto dto = userService.myPage(id);
         System.out.println("dto = " + dto);
 
 

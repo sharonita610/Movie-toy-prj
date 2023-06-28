@@ -17,19 +17,22 @@ public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scheduleCode;
-    private LocalDateTime scheduleTime;
+    @Column(name = "schedule_id")
+    private Long id;
+
+    @Column(name = "schedule_time")
+    private LocalDateTime time;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_code", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "movie_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Movie movie;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theater_code" , foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "theater_id" , foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Theater theater;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_code",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "seat_id",foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Seat seat;
 
 }

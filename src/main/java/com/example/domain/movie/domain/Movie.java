@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Setter
 @Getter
 @ToString
 @AllArgsConstructor
@@ -19,11 +18,18 @@ public class Movie {
 
 
     @Id
+    @Column(name = "movie_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long movieCode;
-    private String movieName;
-    private LocalDate movieRelease;
-    private String movieGenre;
+    private Long id;
+
+    @Column(name = "movie_name")
+    private String name;
+
+    @Column(name = "movie_release")
+    private LocalDate release;
+
+    @Column(name = "movie_genre")
+    private String genre;
 
 
 }

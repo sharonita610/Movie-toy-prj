@@ -16,13 +16,17 @@ public class Theater {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long theaterCode;
+    @Column(name = "theater_id")
+    private Long id;
 
-    private String theaterName;
-    private String theaterLoc;
+    @Column(name = "theater_name")
+    private String name;
+
+    @Column(name = "theater_loc")
+    private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_code" , foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "seat_id" , foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Seat seat;
 
     private int seatCount;

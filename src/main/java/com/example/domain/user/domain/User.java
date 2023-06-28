@@ -16,32 +16,33 @@ import java.time.LocalDate;
 @Table(name = "user")
 public class User {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long userCode;
-
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @NotBlank
-    private String userName;
-    private LocalDate userBirthdate;
-    private String userPhone;
+    @Column(name = "user_name")
+    private String name;
+    @Column(name = "user_birthdate")
+    private LocalDate birthdate;
+    @Column(name = "user_phone")
+    private String phone;
 
-//    @Column(unique = true, nullable = false)
-//    private String userId;
+    @Column(name = "user_mail", unique = true, nullable = false)
+    private String mail;
 
-    @Column(nullable = false)
-    private String userPw;
+    @Column(name = "user_pwd",nullable = false)
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Rank userRank = Rank.STANDARD;
+    @Column(name = "user_rank")
+    private Rank rank = Rank.STANDARD;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
+    @Column(name = "role")
     private Role role = Role.COMMON;
 
 

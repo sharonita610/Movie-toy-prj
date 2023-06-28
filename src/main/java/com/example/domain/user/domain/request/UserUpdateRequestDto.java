@@ -1,9 +1,7 @@
 package com.example.domain.user.domain.request;
 
-import com.example.domain.user.domain.Rank;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Getter
@@ -11,7 +9,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MyPageChangeInfoRequestDTO {
+public class UserUpdateRequestDto {
 
 
     private String userName;
