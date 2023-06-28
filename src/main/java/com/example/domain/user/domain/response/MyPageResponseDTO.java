@@ -1,6 +1,7 @@
 package com.example.domain.user.domain.response;
 
 import com.example.domain.user.domain.Rank;
+import com.example.domain.user.domain.User;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,6 +20,11 @@ public class MyPageResponseDTO {
     private Rank userRank;
 
 
-
-
+    public MyPageResponseDTO(User user) {
+        this.userName = user.getUserName();
+        this.userBirthdate = user.getUserBirthdate();
+        this.userPhone = user.getUserPhone();
+        this.userId = user.getId();
+        this.userRank = user.getUserRank();
+    }
 }

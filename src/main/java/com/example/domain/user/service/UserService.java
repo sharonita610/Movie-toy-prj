@@ -62,13 +62,12 @@ public class UserService {
     // 로그인
     public LoginResponseDTO logIn(LoginRequestDTO dto) {
 
-        if (dto == null) {
-            log.warn("로그인 정보를 다시 확인해주세요");
-            throw new RuntimeException();
-        }
+//        if (dto == null) {
+//            log.warn("로그인 정보를 다시 확인해주세요");
+//            throw new RuntimeException();
+//        }
 
-        User foundUser = userRepository.findByUserId(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("가입된 회원이 아닙니다."));
+        User foundUser = findById(dto.getUserId());
 
         String password = dto.getUserPw();
         String encodedPassword = foundUser.getUserPw();
@@ -84,19 +83,17 @@ public class UserService {
 
     }
 
+    private User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("가입된 회원이 아닙니다."));
+    }
+
     public MyPageResponseDTO myPage(Long userCode) {
 
-        User foundUser = userRepository.findById(userCode)
+        MyPageResponseDTO myPageResponseDTO = userRepository.findById(userCode).map(MyPageResponseDTO::new)
                 .orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
 
-        return MyPageResponseDTO.builder()
-                .userName(foundUser.getUserName())
-                .userId(foundUser.getUserId())
-                .userBirthdate(foundUser.getUserBirthdate())
-                .userRank(foundUser.getUserRank())
-                .userPhone(foundUser.getUserPhone()).build();
-
-
+        return myPageResponseDTO;
     }
 
     public void modifyMyInfo(MyPageChangeInfoRequestDTO dto) {

@@ -16,17 +16,22 @@ import java.time.LocalDate;
 @Table(name = "user")
 public class User {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long userCode;
+
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userCode;
+    private Long id;
 
     @NotBlank
     private String userName;
     private LocalDate userBirthdate;
     private String userPhone;
 
-    @Column(unique = true, nullable = false)
-    private String userId;
+//    @Column(unique = true, nullable = false)
+//    private String userId;
 
     @Column(nullable = false)
     private String userPw;

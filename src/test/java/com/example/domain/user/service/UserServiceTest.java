@@ -6,6 +6,7 @@ import com.example.domain.user.domain.response.LoginResponseDTO;
 import com.example.domain.user.domain.response.MyPageResponseDTO;
 import com.example.domain.user.domain.response.SignUpResponseDTO;
 import com.example.global.DuplicateIdException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,7 @@ class UserServiceTest {
         LoginResponseDTO logedIn = userService.logIn(dto);
 
         // then
+//        Assertions.assertThat();
         System.out.println("flag = " + logedIn);
 
     }
