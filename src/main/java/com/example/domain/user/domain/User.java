@@ -1,5 +1,6 @@
 package com.example.domain.user.domain;
 
+import com.example.domain.user.domain.request.UpdateUserRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -45,5 +46,16 @@ public class User {
     @Column(name = "role")
     private Role role = Role.COMMON;
 
+    public void updateUser(UpdateUserRequestDto dto) {
+        this.name = dto.getName();
+        this.birthdate = dto.getBirthdate();
+        this.phone = dto.getPhone();
+        this.mail = dto.getMail();
+        this.password = dto.getPassword();
+    }
 
+    public boolean upgradeRank(Rank newRank) {
+        this.rank = newRank;
+        return true;
+    }
 }
