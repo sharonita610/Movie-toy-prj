@@ -9,6 +9,9 @@ import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -24,25 +27,26 @@ class UserRepositoryTest {
     @DisplayName("ID 중복 체크 성공 테스트, 중복이 (true)되어야한다")
     void id(){
         // given
-        String id = "hkd11";
+        String id = "hkd22";
 
         // when
-        boolean flag = userRepository.existsUserByUserId(id);
+        Optional<User> found = userRepository.findByMail(id);
 
+        boolean flag = found.isPresent();
         // then
-        assertTrue(flag);
+        assertEquals(true, flag);
     }
     @Test
-    @DisplayName("ID 중복 체크 성공 테스트, 중복이 (false)되어야한다")
+    @DisplayName("ID 중복 체크 성공 테스트, 답이 empty 어야한다")
     void idfalse(){
         // given
         String id = "hkd1";
 
         // when
-        boolean flag = userRepository.existsUserByUserId(id);
+        Optional<User> found = userRepository.findByMail(id);
 
         // then
-        assertFalse(flag);
+        assertEquals(empty(), found);
     }
 
 }

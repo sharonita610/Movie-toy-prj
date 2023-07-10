@@ -5,10 +5,8 @@ import com.example.domain.user.domain.User;
 import lombok.*;
 
 @Getter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@AllArgsConstructor
 public class LoginResponseDto {
 
 
@@ -17,8 +15,8 @@ public class LoginResponseDto {
     private String phone;
 
     public LoginResponseDto(User user) {
-        this.name = name;
-        this.rank = rank;
-        this.phone = phone;
+        this.name = user.getName();
+        this.rank = user.getRank();
+        this.phone = user.getPhone();
     }
 }

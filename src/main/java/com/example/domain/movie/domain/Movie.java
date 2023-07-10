@@ -1,5 +1,6 @@
 package com.example.domain.movie.domain;
 
+import com.example.domain.movie.domain.request.UpdateMovieRequestDto;
 import lombok.*;
 
 
@@ -7,12 +8,11 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
+@Entity
+@Builder
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@Builder
-@Entity
 @Table(name = "movie")
 public class Movie {
 
@@ -32,4 +32,9 @@ public class Movie {
     private String genre;
 
 
+    public void updateMovie(UpdateMovieRequestDto dto) {
+        this.name = dto.getName();
+        this.genre = dto.getGenre();
+        this.release  = dto.getRelease();
+    }
 }

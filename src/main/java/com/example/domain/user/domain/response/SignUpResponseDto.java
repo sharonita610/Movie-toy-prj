@@ -5,10 +5,8 @@ import com.example.domain.user.domain.User;
 import lombok.*;
 
 @Getter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@AllArgsConstructor
 public class SignUpResponseDto {
 
     private String mail;

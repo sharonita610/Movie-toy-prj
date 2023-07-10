@@ -1,19 +1,19 @@
 package com.example.domain.user.domain;
 
+import com.example.domain.payment.domain.Payment;
 import com.example.domain.user.domain.request.UpdateUserRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
 @Table(name = "user")
 public class User {
 
@@ -25,26 +25,31 @@ public class User {
     @NotBlank
     @Column(name = "user_name")
     private String name;
+
     @Column(name = "user_birthdate")
     private LocalDate birthdate;
+
     @Column(name = "user_phone")
     private String phone;
 
     @Column(name = "user_mail", unique = true, nullable = false)
     private String mail;
 
-    @Column(name = "user_pwd",nullable = false)
+    @Column(name = "user_pwd", nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
     @Builder.Default
     @Column(name = "user_rank")
+    @Enumerated(EnumType.STRING)
     private Rank rank = Rank.STANDARD;
 
     @Enumerated(EnumType.STRING)
-    @Builder.Default
     @Column(name = "role")
-    private Role role = Role.COMMON;
+    private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Payment> paymentList;
+
 
     public void updateUser(UpdateUserRequestDto dto) {
         this.name = dto.getName();
@@ -58,4 +63,5 @@ public class User {
         this.rank = newRank;
         return true;
     }
+
 }

@@ -31,58 +31,50 @@ public class UserService {
     private final PasswordEncoder encoder;
 
     public SignUpResponseDto signUp(final SignUpRequestDto dto) {
+        isDuplicatedMail(dto.getMail());
 
-        isDuplicateMail(dto.getMail());
-
-        encodePassword(dto);
-
-        User saved = userRepository.save(dto.toEntity(dto));
-
+        String encodedPassword = encodePassword(dto.getPassword());
+        User saved = userRepository.save(dto.toEntity(encodedPassword));
         return new SignUpResponseDto(saved);
-
     }
 
     public LoginResponseDto logIn(LoginRequestDto dto) {
-
         User user = findByEmail(dto.getMail());
-
-        checkPassword(dto, user.getPassword());
-
+        checkPassword(dto.getPassword(), user.getPassword());
         return new LoginResponseDto(user);
-
     }
 
-    public UserDetailResponseDto getUserDetail(Long id) {
-
+    public UserDetailResponseDto getDetail(Long id) {
         return getUserDetailResponseDto(id);
-
     }
 
-    public UserDetailResponseDto updateUser(UpdateUserRequestDto dto, Long id) {
-
-        updateUserInfo(dto, findById(id));
-
+    public UserDetailResponseDto update(UpdateUserRequestDto dto, Long id) {
+        encodePassword(dto.getPassword());
+        findById(id).updateUser(dto);
         return getUserDetailResponseDto(id);
-
     }
 
     public boolean signOut(Long id) {
-
         userRepository.delete(findById(id));
-
         return true;
+    }
+
+    public boolean upgradeRank(UpgradeUserRankRequestDto dto) {
+        User user = findById(dto.getUserId());
+        Rank newRank = dto.getNewRank();
+
+        validateUserRank(user.getRank(), newRank);
+        return user.upgradeRank(newRank);
 
     }
 
-    public boolean upgradeUserRank(UpgradeUserRankRequestDto dto) {
-
-        User user = findById(dto.getId());
-
-        return user.upgradeRank(checkRoleAndRank(dto.getRole(), dto.getNewRank(), user.getRank()));
-
+    private static void validateUserRank(Rank rawRank, Rank newRank) {
+        if (rawRank.equals(newRank)) {
+            throw new CustomException(SAME_RANK.getMessage(), SAME_RANK);
+        }
     }
 
-    private User findById(Long id) {
+    public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND.getMessage(), USER_NOT_FOUND));
 
@@ -94,46 +86,28 @@ public class UserService {
 
     }
 
-    private void checkPassword(LoginRequestDto dto, String password) {
-
-        if (!encoder.matches(dto.getPassword(), password)) {
+    private void checkPassword(String inputPassword, String rawPassword) {
+        if (!encoder.matches(inputPassword, rawPassword)) {
             throw new CustomException(WRONG_PASSWORD.getMessage(), WRONG_PASSWORD);
         }
     }
 
-    private void isDuplicateMail(String mail) {
+    private void isDuplicatedMail(String mail) {
         userRepository.findByMail(mail)
                 .ifPresent(x -> {
                     throw new CustomException(DUPLICATE_MAIL.getMessage(), DUPLICATE_MAIL);
                 });
     }
 
-    private void encodePassword(SignUpRequestDto dto) {
-        String encoded = encoder.encode(dto.getPassword());
-        dto.setUserPw(encoded);
+    private String encodePassword(String password) {
+        return encoder.encode(password);
     }
 
     private UserDetailResponseDto getUserDetailResponseDto(Long id) {
-        System.out.println("id = " + id);
         return userRepository.findById(id).map(UserDetailResponseDto::new)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND.getMessage(), USER_NOT_FOUND));
     }
 
-    private void updateUserInfo(UpdateUserRequestDto dto, User foundUser) {
-        String encoded = encoder.encode(dto.getPassword());
-        foundUser.updateUser(dto);
-    }
 
 
-    private static Rank checkRoleAndRank(Role role, Rank newRank, Rank rawRank) {
-
-        if (!role.equals(Role.ADMIN)) {
-            throw new CustomException(NOT_ALLOWED.getMessage(), NOT_ALLOWED);
-
-        } else if (rawRank.equals(newRank)) {
-            throw new CustomException(SAME_RANK.getMessage(), SAME_RANK);
-
-        }
-        return newRank;
-    }
 }

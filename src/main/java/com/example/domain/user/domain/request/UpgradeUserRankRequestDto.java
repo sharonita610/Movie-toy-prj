@@ -1,23 +1,19 @@
 package com.example.domain.user.domain.request;
 
 import com.example.domain.user.domain.Rank;
-import com.example.domain.user.domain.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 
-@Validated
 @Getter
 @AllArgsConstructor
+@Builder
 public class UpgradeUserRankRequestDto {
 
     @NotBlank
-    private Long id;
-
-    @NotBlank
-    private Role role;
+    private Long userId;
 
     @NotBlank
     private Rank newRank;

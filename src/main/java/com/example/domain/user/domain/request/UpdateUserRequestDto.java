@@ -2,13 +2,12 @@ package com.example.domain.user.domain.request;
 
 import com.example.domain.user.domain.User;
 import lombok.*;
-
 import java.time.LocalDate;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class UpdateUserRequestDto {
 
 

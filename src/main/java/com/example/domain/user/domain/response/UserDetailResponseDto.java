@@ -7,10 +7,8 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Getter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@AllArgsConstructor
 public class UserDetailResponseDto {
 
     private String name;

@@ -1,12 +1,17 @@
 package com.example.domain.user.service;
 
+import com.example.domain.user.domain.Rank;
+import com.example.domain.user.domain.User;
 import com.example.domain.user.domain.request.LoginRequestDto;
 import com.example.domain.user.domain.request.SignUpRequestDto;
 import com.example.domain.user.domain.request.UpdateUserRequestDto;
+import com.example.domain.user.domain.request.UpgradeUserRankRequestDto;
 import com.example.domain.user.domain.response.LoginResponseDto;
 import com.example.domain.user.domain.response.UserDetailResponseDto;
 import com.example.domain.user.domain.response.SignUpResponseDto;
+import com.example.domain.user.repository.UserRepository;
 import com.example.global.exception.CustomException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,15 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
+
 import javax.transaction.Transactional;
-
-
 import java.time.LocalDate;
 
+import static com.example.domain.user.domain.Role.ADMIN;
+import static com.example.domain.user.domain.Role.COMMON;
 import static org.junit.Assert.*;
 
 @SpringBootTest
-
 @Transactional
 @Rollback(value = true)
 class UserServiceTest {
@@ -31,18 +36,27 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserRepository repository;
+
     @BeforeEach
     void signUpBefore() {
-
         SignUpRequestDto dto = SignUpRequestDto.builder()
                 .name("admin")
                 .password("!23")
                 .mail("admin")
+                .role(ADMIN)
                 .build();
         userService.signUp(dto);
+        SignUpRequestDto dto1 = SignUpRequestDto.builder()
+                .name("user")
+                .password("123")
+                .mail("user")
+                .birthdate(LocalDate.parse("2020-02-02"))
+                .build();
+        userService.signUp(dto1);
 
-        System.out.println("\n\n\n");
-        System.out.println("dto = " + dto);
+
     }
 
     @Test
@@ -53,7 +67,7 @@ class UserServiceTest {
         SignUpRequestDto dto = SignUpRequestDto.builder()
                 .name("나나1")
                 .password("111111")
-                .mail("admin")
+                .mail("admin1")
                 .build();
 
 
@@ -94,7 +108,7 @@ class UserServiceTest {
 
         // given
         LoginRequestDto dto = LoginRequestDto.builder()
-                .mail("admi")
+                .mail("admin")
                 .password("!23")
                 .build();
 
@@ -110,10 +124,21 @@ class UserServiceTest {
 
     @Test
     @DisplayName("회원정보를 수정하면 db에 반영 되어야 한다.")
-    void updateUsertest() {
+    void updateUserTest() {
+
+        String newMail = "hello1";
 
         // given
-        Long id = 2L;
+        User user = User.builder()
+                .name("test1")
+                .birthdate(LocalDate.parse("2020-01-01"))
+                .rank(Rank.GOLD)
+                .phone("010-0000-0000")
+                .mail("test1")
+                .password("1111")
+                .build();
+        User saved = repository.save(user);
+        Long id = saved.getId();
 
         UpdateUserRequestDto dto = UpdateUserRequestDto.builder()
                 .name("안녕")
@@ -125,10 +150,10 @@ class UserServiceTest {
 
 
         // when
-        UserDetailResponseDto responseDto = userService.updateUser(dto, id);
+        UserDetailResponseDto responseDto = userService.update(dto, id);
 
         // then
-        assertEquals("hello1", responseDto.getMail());
+        assertEquals(newMail, responseDto.getMail());
     }
 
     @Test
@@ -136,15 +161,26 @@ class UserServiceTest {
     void myPageTest() {
 
         // given
-        Long id = 1L;
+        String name = "test1";
+        User user = User.builder()
+                .name(name)
+                .birthdate(LocalDate.parse("2020-01-01"))
+                .rank(Rank.GOLD)
+                .role(ADMIN)
+                .phone("010-0000-0000")
+                .mail("test1")
+                .password("1111")
+                .build();
+        User saved = repository.save(user);
+        Long id = saved.getId();
 
         // when
-        UserDetailResponseDto dto = userService.getUserDetail(id);
+        UserDetailResponseDto dto = userService.getDetail(id);
         System.out.println("dto = " + dto);
 
 
         // then
-        assertEquals("admin", dto.getName());
+        assertEquals(name, dto.getName());
     }
 
     @Test
@@ -152,7 +188,18 @@ class UserServiceTest {
     void withdrawTest() {
 
         // given
-        Long id = 1L;
+        String name = "test1";
+        User user = User.builder()
+                .name(name)
+                .birthdate(LocalDate.parse("2020-01-01"))
+                .rank(Rank.GOLD)
+                .role(ADMIN)
+                .phone("010-0000-0000")
+                .mail("test1")
+                .password("1111")
+                .build();
+        User saved = repository.save(user);
+        Long id = saved.getId();
 
         // when
         boolean flag = userService.signOut(id);
@@ -168,13 +215,89 @@ class UserServiceTest {
         // given
         Long id = 6L;
 
-
         // then
         assertThrows(CustomException.class,
                 () -> {
                     userService.signOut(id);
                 }
         );
+
+    }
+
+    @Test
+    @DisplayName("관리자는 유저의 랭크를 업그레이드 시킬 수 있다.")
+    void upgradeUserRank() {
+
+        // given
+        User admin = repository.save(User.builder()
+                .name("test1")
+                .birthdate(LocalDate.parse("2020-01-01"))
+                .role(ADMIN)
+                .mail("test1")
+                .password("1111")
+                .build());
+
+        User savedUser = repository.save(User.builder()
+                .name("user")
+                .birthdate(LocalDate.parse("2020-01-01"))
+                .role(COMMON)
+                .phone("010-0000-0000")
+                .mail("test2")
+                .password("1111")
+                .build());
+
+        Long userId = savedUser.getId();
+
+
+        //given
+        UpgradeUserRankRequestDto dto = UpgradeUserRankRequestDto.builder()
+                .newRank(Rank.GOLD)
+                .userId(userId)
+                .build();
+
+        // when
+        boolean flag = userService.upgradeRank(dto);
+
+        // then
+        Assertions.assertTrue(flag);
+
+
+    }
+
+    @Test
+    @DisplayName("관리자가 유저의 이전 랭크와 동일한 랭크를 설정하면 false 여야한다")
+    void checkUserRankErrorTest() {
+
+        // given
+        User admin = repository.save(User.builder()
+                .name("test1")
+                .birthdate(LocalDate.parse("2020-01-01"))
+                .role(COMMON)
+                .mail("test1")
+                .password("1111")
+                .build());
+
+        User savedUser = repository.save(User.builder()
+                .name("user")
+                .birthdate(LocalDate.parse("2020-01-01"))
+                .role(COMMON)
+                .phone("010-0000-0000")
+                .mail("test2")
+                .password("1111")
+                .build());
+
+        Long userId = savedUser.getId();
+
+
+        //given
+        UpgradeUserRankRequestDto dto = UpgradeUserRankRequestDto.builder()
+                .newRank(Rank.STANDARD)
+                .userId(userId)
+                .build();
+
+        // then
+        assertThrows(CustomException.class, () -> userService.upgradeRank(dto));
+
 
     }
 

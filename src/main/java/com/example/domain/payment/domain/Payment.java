@@ -1,6 +1,6 @@
 package com.example.domain.payment.domain;
 
-import com.example.domain.movie.domain.Schedule;
+import com.example.domain.schedule.domain.Schedule;
 import com.example.domain.user.domain.User;
 import lombok.*;
 
@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Builder
 @Table(name = "payment")
 public class Payment {
@@ -26,8 +24,13 @@ public class Payment {
     private PaymentType payment;
 
     private LocalDateTime time;
-    private double amount;
+
+    @Builder.Default
+    @Column(name = "amount")
+    private double amount = 10000;
+
     private String status;
+
     private LocalDateTime cancelPayment;
 
     @ManyToOne(fetch = FetchType.LAZY)
