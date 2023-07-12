@@ -1,12 +1,16 @@
 package com.example.domain.payment.service;
 
-import com.example.domain.movie.domain.Movie;
-import com.example.domain.payment.domain.PaymentRequestDto;
-import com.example.domain.payment.domain.PaymentResponseDto;
-import com.example.domain.payment.domain.SeatSelectedDto;
+import com.example.domain.payment.domain.Payment;
+import com.example.domain.payment.domain.request.FixPaymentRequestDto;
+import com.example.domain.payment.domain.request.PaymentRequestDto;
+import com.example.domain.payment.domain.request.SeatSelectedDto;
+import com.example.domain.payment.domain.response.PaymentResponseDto;
 import com.example.domain.schedule.domain.Schedule;
 import com.example.domain.schedule.service.ScheduleService;
-import com.example.domain.theater.domain.Theater;
+import com.example.domain.seat.domain.Seat;
+import com.example.domain.seat.domain.Sold;
+import com.example.domain.seat.domain.request.SaveSeatRequestDto;
+import com.example.domain.seat.service.SeatService;
 import com.example.domain.user.domain.Rank;
 import com.example.domain.user.domain.User;
 import com.example.domain.user.service.UserService;
@@ -14,8 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.example.domain.seat.domain.Sold.*;
 
 @Service
 @Transactional
@@ -25,18 +30,40 @@ public class PaymentFacadeService {
     private final PaymentService paymentService;
     private final ScheduleService scheduleService;
     private final UserService userService;
-
+    private final SeatService seatService;
 
     public PaymentResponseDto getPrice(Long scheduleId, PaymentRequestDto dto) {
-
         Schedule schedule = scheduleService.findById(scheduleId);
         User foundUser = userService.findById(dto.getUserId());
-        return new PaymentResponseDto(schedule, foundUser.getRank(), dto.getCount(), dto.getSeatList(), getDiscountedPrice(dto.getCount(), foundUser.getRank(), paymentService.getAmount()));
+        return new PaymentResponseDto(schedule, foundUser.getRank(), dto.getCount(), dto.getSeatList(),
+                getDiscountedPrice(dto.getCount(), foundUser.getRank(), paymentService.getAmount()));
     }
 
+    public boolean payMyMovie(Long scheduleId, FixPaymentRequestDto dto) {
+        Schedule schedule = scheduleService.findById(scheduleId);
+        User foundUser = userService.findById(dto.getUserId());
+        setSeatStatus(dto.getSeatList());
+        paymentService.save(dto, foundUser, schedule);
+        return true;
+    }
+
+    private void setSeatStatus(List<SeatSelectedDto> seatList) {
+
+        for (SeatSelectedDto seatDto : seatList) {
+            Seat foundSeat = seatService.findById(seatDto.getSeatId());
+            Sold status = foundSeat.getStatus();
+
+            if (status == N) {
+                status = Y;
+                foundSeat.setStatus(status);
+            }
+        }
+    }
 
     private static double getDiscountedPrice(int count, Rank rank, double amount) {
         double amountWithDc = rank.getDiscount(amount);
         return amountWithDc * count;
     }
+
+
 }

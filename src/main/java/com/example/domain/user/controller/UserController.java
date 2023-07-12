@@ -4,8 +4,10 @@ import com.example.domain.user.domain.request.LoginRequestDto;
 import com.example.domain.user.domain.request.UpgradeUserRankRequestDto;
 import com.example.domain.user.domain.request.UpdateUserRequestDto;
 import com.example.domain.user.domain.request.SignUpRequestDto;
+import com.example.domain.user.domain.response.MyPaymentResponseDto;
 import com.example.domain.user.domain.response.UserDetailResponseDto;
 import com.example.domain.user.domain.response.SignUpResponseDto;
+import com.example.domain.user.service.UserFacadeService;
 import com.example.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +15,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("users")
 public class UserController {
 
     private final UserService userService;
+    private final UserFacadeService facadeService;
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseDto> signUp(@Validated @RequestBody SignUpRequestDto dto, BindingResult result) {
@@ -49,6 +54,16 @@ public class UserController {
     @PatchMapping
     public ResponseEntity<Boolean> upgradeRank(@Validated UpgradeUserRankRequestDto dto){
         return ResponseEntity.ok().body(userService.upgradeRank(dto));
+    }
+
+    @GetMapping("/{id}/ticket")
+    public ResponseEntity<List<MyPaymentResponseDto>> getTicket(@PathVariable Long id){
+        return ResponseEntity.ok().body(userService.getTicket(id));
+    }
+
+    @PatchMapping("/{id}/{paymentId}")
+    public ResponseEntity<Boolean> cancelTicket(@PathVariable Long id, @PathVariable Long paymentId){
+        return ResponseEntity.ok().body(facadeService.cancel(id, paymentId));
     }
 
 }

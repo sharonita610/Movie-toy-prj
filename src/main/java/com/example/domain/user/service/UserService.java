@@ -1,12 +1,13 @@
 package com.example.domain.user.service;
 
+import com.example.domain.payment.domain.Payment;
 import com.example.domain.user.domain.Rank;
-import com.example.domain.user.domain.Role;
 import com.example.domain.user.domain.request.UpgradeUserRankRequestDto;
 import com.example.domain.user.domain.request.UpdateUserRequestDto;
 import com.example.domain.user.domain.response.LoginResponseDto;
 import com.example.domain.user.domain.request.LoginRequestDto;
 import com.example.domain.user.domain.request.SignUpRequestDto;
+import com.example.domain.user.domain.response.MyPaymentResponseDto;
 import com.example.domain.user.domain.response.UserDetailResponseDto;
 import com.example.domain.user.domain.response.SignUpResponseDto;
 import com.example.domain.user.domain.User;
@@ -19,7 +20,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.util.List;
+
 import static com.example.global.exception.ErrorCode.*;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -54,6 +58,11 @@ public class UserService {
         return getUserDetailResponseDto(id);
     }
 
+    public List<MyPaymentResponseDto> getTicket(Long id) {
+        findById(id);
+        return userRepository.findPaymentListByUserId(id).stream().map(MyPaymentResponseDto::new).collect(toList());
+    }
+
     public boolean signOut(Long id) {
         userRepository.delete(findById(id));
         return true;
@@ -65,7 +74,6 @@ public class UserService {
 
         validateUserRank(user.getRank(), newRank);
         return user.upgradeRank(newRank);
-
     }
 
     private static void validateUserRank(Rank rawRank, Rank newRank) {
@@ -107,7 +115,6 @@ public class UserService {
         return userRepository.findById(id).map(UserDetailResponseDto::new)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND.getMessage(), USER_NOT_FOUND));
     }
-
 
 
 }

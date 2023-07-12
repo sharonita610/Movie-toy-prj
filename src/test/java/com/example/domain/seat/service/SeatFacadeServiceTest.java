@@ -36,8 +36,6 @@ class SeatFacadeServiceTest {
     @Autowired
     SeatService seatService;
 
-    @Autowired
-    SeatFacadeService seatFacadeService;
 
     @Autowired
     ScheduleService scheduleService;

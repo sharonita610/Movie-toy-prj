@@ -5,14 +5,14 @@ import com.example.domain.seat.domain.Seat;
 import com.example.domain.seat.domain.response.SeatListResponseDto;
 import com.example.domain.seat.repository.SeatRepository;
 import com.example.global.exception.CustomException;
+import com.example.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static com.example.global.exception.ErrorCode.DUPLICATE_SEAT;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -35,4 +35,9 @@ public class SeatService {
         return seatRepository.findAllByTheaterId(theaterId);
     }
 
+    public Seat findById(Long id) {
+        return seatRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.SEAT_NOT_FOUND.getMessage(), ErrorCode.SEAT_NOT_FOUND)
+        );
+    }
 }

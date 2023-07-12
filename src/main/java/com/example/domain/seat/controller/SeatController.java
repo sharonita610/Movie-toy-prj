@@ -2,7 +2,6 @@ package com.example.domain.seat.controller;
 
 import com.example.domain.seat.domain.request.SaveSeatRequestDto;
 import com.example.domain.seat.domain.response.SeatListResponseDto;
-import com.example.domain.seat.service.SeatFacadeService;
 import com.example.domain.seat.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import java.util.List;
 public class SeatController {
 
     private final SeatService seatService;
-    private final SeatFacadeService seatFacadeService;
 
     @GetMapping
     public ResponseEntity<List<SeatListResponseDto>> getSeatList() {

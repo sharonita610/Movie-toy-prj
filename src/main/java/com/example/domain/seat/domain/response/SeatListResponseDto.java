@@ -1,6 +1,7 @@
 package com.example.domain.seat.domain.response;
 
 import com.example.domain.seat.domain.Seat;
+import com.example.domain.seat.domain.Sold;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,10 +16,12 @@ public class SeatListResponseDto {
 
     private String name;
     private int seatCount;
+    private Sold status;
 
     public SeatListResponseDto(Seat seat) {
         this.name = seat.getName();
         this.seatCount = seat.getName().length();
+        this.status = seat.getStatus();
     }
 
 

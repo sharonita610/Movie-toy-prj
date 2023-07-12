@@ -1,11 +1,13 @@
 package com.example.domain.payment.domain;
 
+import com.example.domain.payment.domain.request.SeatSelectedDto;
 import com.example.domain.schedule.domain.Schedule;
 import com.example.domain.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,17 +31,22 @@ public class Payment {
     @Column(name = "amount")
     private double amount = 10000;
 
+    private int count;
+
     private String status;
 
     private LocalDateTime cancelPayment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id" , foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-
+    public void cancelPayment(String cancel, LocalDateTime now) {
+        this.status = cancel;
+        this.cancelPayment = now;
+    }
 }

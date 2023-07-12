@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,9 +48,8 @@ public class User {
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Payment> paymentList;
-
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Payment> paymentList = new ArrayList<>();
 
     public void updateUser(UpdateUserRequestDto dto) {
         this.name = dto.getName();

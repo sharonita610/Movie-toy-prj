@@ -39,8 +39,4 @@ public class ScheduleService {
                 () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
         );
     }
-
-    public List<SeatListResponseDto> findAllByTheaterId(Long theaterId) {
-        return scheduleRepository.findAllByTheater_Id(theaterId).stream().map(SeatListResponseDto::new).collect(toList());
-    }
 }
