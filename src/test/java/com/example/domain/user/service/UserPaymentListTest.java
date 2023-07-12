@@ -2,6 +2,7 @@ package com.example.domain.user.service;
 
 import com.example.domain.movie.domain.Movie;
 import com.example.domain.movie.repository.MovieRepository;
+import com.example.domain.payment.domain.PaidSeat;
 import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.request.FixPaymentRequestDto;
 import com.example.domain.payment.domain.request.PaymentRequestDto;
@@ -37,13 +38,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.domain.payment.domain.PaymentType.CASH;
 import static com.example.domain.user.domain.Role.COMMON;
 
 @SpringBootTest
 @Transactional
-@Rollback
+@Rollback(value = false)
 class UserPaymentListTest {
 
 
@@ -109,7 +111,7 @@ class UserPaymentListTest {
                     SaveSeatRequestDto.builder()
                             .name("A" + i)
                             .theaterId(gangNam)
-                            .status(Sold.N)
+                            .status(Sold.ABLE)
                             .build());
 
         }
@@ -158,12 +160,9 @@ class UserPaymentListTest {
         );
 
         List<MyPaymentResponseDto> ticket = userService.getTicket(userId);
-
-        for (MyPaymentResponseDto s : ticket) {
-
-            List<Seat> seatList1 = s.getSeatList();
-            System.out.println("seatList1 = " + seatList1.get(0));
-            System.out.println("seatList1 = " + seatList1.get(1));
+        List<PaidSeat> seatList1 = ticket.get(0).getSeatList();
+        for (PaidSeat paidSeat : seatList1) {
+            System.out.println("paidSeat.getSeatName() = " + paidSeat.getSeatName());
         }
 
         Assertions.assertEquals(CASH, ticket.get(0).getPayment());

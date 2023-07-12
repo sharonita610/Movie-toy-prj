@@ -110,7 +110,7 @@ class UserFacadeServiceTest {
                     SaveSeatRequestDto.builder()
                             .name("A" + i)
                             .theaterId(gangNam)
-                            .status(Sold.N)
+                            .status(Sold.ABLE)
                             .build());
 
         }
@@ -196,7 +196,7 @@ class UserFacadeServiceTest {
                     SaveSeatRequestDto.builder()
                             .name("A" + i)
                             .theaterId(gangNam)
-                            .status(Sold.N)
+                            .status(Sold.ABLE)
                             .build());
 
         }
@@ -204,7 +204,7 @@ class UserFacadeServiceTest {
         scheduleFacadeService.saveSchedule(SaveScheduleRequestDto.builder()
                 .movieId(movieId)
                 .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-11T18:00")).build());
+                .time(LocalDateTime.parse("2023-07-13T18:00")).build());
 
 
         List<ScheduleListResponseDto> scheduleList = scheduleService.findAllByMovieId(movieId);
@@ -230,19 +230,18 @@ class UserFacadeServiceTest {
                         .userId(userId)
                         .build());
 
+        FixPaymentRequestDto build = FixPaymentRequestDto.builder()
+                .amountToPay(price.getAmountToPay())
+                .count(2)
+                .payment(CASH)
+                .seatList(seatList)
+                .userId(userId)
+                .scheduleId(scheduleId)
+                .build();
 
-        paymentFacadeService.payMyMovie(
-                scheduleId, FixPaymentRequestDto.builder()
-                        .amountToPay(price.getAmountToPay())
-                        .count(2)
-                        .payment(CASH)
-                        .seatList(seatList)
-                        .userId(userId)
-                        .scheduleId(scheduleId)
-                        .build()
-        );
+        paymentFacadeService.payMyMovie(scheduleId, build);
 
-        assertTrue(userFacadeService.cancel(userId, 1L));
+        assertTrue(userFacadeService.cancel(userId, 1L ));
 
     }
 

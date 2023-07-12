@@ -1,12 +1,12 @@
 package com.example.domain.payment.domain;
 
-import com.example.domain.payment.domain.request.SeatSelectedDto;
 import com.example.domain.schedule.domain.Schedule;
 import com.example.domain.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,7 +35,11 @@ public class Payment {
 
     private String status;
 
+
     private LocalDateTime cancelPayment;
+
+    @OneToMany(mappedBy = "payment" , fetch = FetchType.LAZY)
+    private List<PaidSeat> seatList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

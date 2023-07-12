@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.global.exception.ErrorCode.SEAT_NOT_FOUND;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -37,7 +38,13 @@ public class SeatService {
 
     public Seat findById(Long id) {
         return seatRepository.findById(id).orElseThrow(
-                () -> new CustomException(ErrorCode.SEAT_NOT_FOUND.getMessage(), ErrorCode.SEAT_NOT_FOUND)
+                () -> new CustomException(SEAT_NOT_FOUND.getMessage(), SEAT_NOT_FOUND)
+        );
+    }
+
+    public Seat findByName(String seatName) {
+        return seatRepository.findByName(seatName).orElseThrow(
+                () -> new CustomException(SEAT_NOT_FOUND.getMessage(), SEAT_NOT_FOUND)
         );
     }
 }

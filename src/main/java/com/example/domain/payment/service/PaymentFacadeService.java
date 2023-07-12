@@ -1,5 +1,6 @@
 package com.example.domain.payment.service;
 
+import com.example.domain.payment.domain.PaidSeat;
 import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.request.FixPaymentRequestDto;
 import com.example.domain.payment.domain.request.PaymentRequestDto;
@@ -9,7 +10,6 @@ import com.example.domain.schedule.domain.Schedule;
 import com.example.domain.schedule.service.ScheduleService;
 import com.example.domain.seat.domain.Seat;
 import com.example.domain.seat.domain.Sold;
-import com.example.domain.seat.domain.request.SaveSeatRequestDto;
 import com.example.domain.seat.service.SeatService;
 import com.example.domain.user.domain.Rank;
 import com.example.domain.user.domain.User;
@@ -31,6 +31,7 @@ public class PaymentFacadeService {
     private final ScheduleService scheduleService;
     private final UserService userService;
     private final SeatService seatService;
+    private final PaidSeatService paidSeatService;
 
     public PaymentResponseDto getPrice(Long scheduleId, PaymentRequestDto dto) {
         Schedule schedule = scheduleService.findById(scheduleId);
@@ -42,25 +43,32 @@ public class PaymentFacadeService {
     public boolean payMyMovie(Long scheduleId, FixPaymentRequestDto dto) {
         Schedule schedule = scheduleService.findById(scheduleId);
         User foundUser = userService.findById(dto.getUserId());
-        setSeatStatus(dto.getSeatList());
-        paymentService.save(dto, foundUser, schedule);
+        Payment payment = paymentService.save(dto, foundUser, schedule);
+        savePaidSeat(dto.getSeatList(), payment);
+        updateSeatStatus(dto.getSeatList());
         return true;
     }
 
-    private void setSeatStatus(List<SeatSelectedDto> seatList) {
+    private void savePaidSeat(List<SeatSelectedDto> seatList, Payment payment) {
+        for (SeatSelectedDto selectedDto : seatList) {
+            Seat seat = seatService.findById(selectedDto.getSeatId());
+            paidSeatService.save(seat.getName(), payment);
+        }
+    }
 
-        for (SeatSelectedDto seatDto : seatList) {
-            Seat foundSeat = seatService.findById(seatDto.getSeatId());
-            Sold status = foundSeat.getStatus();
+    private void updateSeatStatus(List<SeatSelectedDto> seatList) {
+        for (SeatSelectedDto selectedDto : seatList) {
+            Seat seat = seatService.findById(selectedDto.getSeatId());
+            Sold status = seat.getStatus();
 
-            if (status == N) {
-                status = Y;
-                foundSeat.setStatus(status);
+            if (status == ABLE) {
+                status = SOLD;
+                seat.updateStatus(status);
             }
         }
     }
 
-    private static double getDiscountedPrice(int count, Rank rank, double amount) {
+    private double getDiscountedPrice(int count, Rank rank, double amount) {
         double amountWithDc = rank.getDiscount(amount);
         return amountWithDc * count;
     }

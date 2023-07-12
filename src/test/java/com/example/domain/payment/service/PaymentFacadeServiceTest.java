@@ -119,6 +119,7 @@ class PaymentFacadeServiceTest {
         Long scheduleId = schedule.getId();
 
         List<SeatListResponseDto> list = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
+
         SeatSelectedDto dto = new SeatSelectedDto(1L);
         SeatSelectedDto dto1 = new SeatSelectedDto(2L);
 
@@ -173,7 +174,7 @@ class PaymentFacadeServiceTest {
                     SaveSeatRequestDto.builder()
                             .name("A" + i)
                             .theaterId(gangNam)
-                            .status(Sold.N)
+                            .status(Sold.ABLE)
                             .build());
 
         }

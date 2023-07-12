@@ -1,5 +1,6 @@
 package com.example.domain.user.domain.response;
 
+import com.example.domain.payment.domain.PaidSeat;
 import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.PaymentType;
 import com.example.domain.seat.domain.Seat;
@@ -23,7 +24,7 @@ public class MyPaymentResponseDto {
     private int count;
     private PaymentType payment;
     private double amountToPay;
-    private List<Seat> seatList;
+    private List<PaidSeat> seatList;
 
     private String title;
     private String genre;
@@ -39,7 +40,7 @@ public class MyPaymentResponseDto {
         this.count = payment.getCount();
         this.payment = payment.getPayment();
         this.amountToPay = payment.getAmount();
-        this.seatList = payment.getSchedule().getTheater().getSeats();
+        this.seatList = payment.getSeatList();
         this.title = payment.getSchedule().getMovie().getName();
         this.genre = payment.getSchedule().getMovie().getGenre();
         this.theater = payment.getSchedule().getTheater().getName();

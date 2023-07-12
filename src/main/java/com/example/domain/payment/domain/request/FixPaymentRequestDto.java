@@ -1,10 +1,9 @@
 package com.example.domain.payment.domain.request;
 
+import com.example.domain.payment.domain.PaidSeat;
 import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.PaymentType;
 import com.example.domain.schedule.domain.Schedule;
-import com.example.domain.seat.domain.Seat;
-import com.example.domain.user.domain.Rank;
 import com.example.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +36,6 @@ public class FixPaymentRequestDto {
     @NotEmpty
     private double amountToPay;
 
-    @NotEmpty
     private List<SeatSelectedDto> seatList;
 
 
