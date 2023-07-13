@@ -1,5 +1,6 @@
 package com.example.domain.payment.domain;
 
+import com.example.domain.payment.domain.response.PaidSeatResponseDto;
 import com.example.domain.schedule.domain.Schedule;
 import com.example.domain.user.domain.User;
 import lombok.*;
@@ -34,7 +35,6 @@ public class Payment {
     private int count;
 
     private String status;
-
 
     private LocalDateTime cancelPayment;
 

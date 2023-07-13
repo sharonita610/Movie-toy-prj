@@ -3,6 +3,7 @@ package com.example.domain.user.domain.response;
 import com.example.domain.payment.domain.PaidSeat;
 import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.PaymentType;
+import com.example.domain.payment.domain.response.PaidSeatResponseDto;
 import com.example.domain.seat.domain.Seat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -24,7 +24,7 @@ public class Schedule {
     private LocalDateTime time;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -15,4 +15,5 @@ import java.util.List;
 public class PaidSeatResponseDto {
 
     private String paidSeatName;
+
 }
