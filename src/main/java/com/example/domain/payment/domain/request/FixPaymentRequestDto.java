@@ -43,6 +43,7 @@ public class FixPaymentRequestDto {
         return Payment.builder()
                 .payment(getPayment())
                 .time(LocalDateTime.now())
+                .count(getCount())
                 .amount(getAmountToPay())
                 .user(user)
                 .schedule(schedule)

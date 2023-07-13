@@ -12,6 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Id 중복 체크
     Optional<User> findByMail(String mail);
-    @Query("SELECT p FROM User u JOIN u.paymentList p WHERE u.id = :userId")
+    @Query("SELECT DISTINCT p FROM User u JOIN FETCH u.paymentList p JOIN FETCH p.seatList ps WHERE u.id = :userId")
     Optional<Payment> findPaymentListByUserId(@Param("userId") Long id);
+
 }

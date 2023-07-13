@@ -39,7 +39,7 @@ import static com.example.domain.payment.domain.PaymentType.*;
 import static com.example.domain.user.domain.Role.COMMON;
 
 @SpringBootTest
-@Rollback
+@Rollback(value = false)
 @Transactional
 class PaymentFacadeServiceTest {
 
@@ -75,9 +75,9 @@ class PaymentFacadeServiceTest {
     void getPayment() {
 
         User user = userRepository.save(User.builder()
-                .name("user")
+                .name("user1")
                 .birthdate(LocalDate.parse("2020-01-01"))
-                .mail("test1")
+                .mail("test2")
                 .role(COMMON)
                 .rank(Rank.GOLD)
                 .password("1111")
@@ -101,6 +101,7 @@ class PaymentFacadeServiceTest {
             seatService.save(
                     SaveSeatRequestDto.builder()
                             .name("A" + i)
+                            .status(Sold.ABLE)
                             .theaterId(gangNam)
                             .build());
 

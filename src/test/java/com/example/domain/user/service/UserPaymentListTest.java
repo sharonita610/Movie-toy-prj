@@ -7,6 +7,7 @@ import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.request.FixPaymentRequestDto;
 import com.example.domain.payment.domain.request.PaymentRequestDto;
 import com.example.domain.payment.domain.request.SeatSelectedDto;
+import com.example.domain.payment.domain.response.PaidSeatResponseDto;
 import com.example.domain.payment.domain.response.PaymentResponseDto;
 import com.example.domain.payment.service.PaymentFacadeService;
 import com.example.domain.payment.service.PaymentService;
@@ -81,7 +82,7 @@ class UserPaymentListTest {
 
     @Test
     @DisplayName("유저는 본인이 결제한 건을 모두 조회 할 수 있다.")
-    void postPayment() {
+    void getPaymentList() {
 
         User user = userRepository.save(User.builder()
                 .name("user")
@@ -128,7 +129,7 @@ class UserPaymentListTest {
 
         Long scheduleId = schedule.getId();
 
-        List<SeatListResponseDto> list = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
+        scheduleFacadeService.getSeatListByScheduleId(scheduleId);
 
         SeatSelectedDto dto = new SeatSelectedDto(1L);
         SeatSelectedDto dto1 = new SeatSelectedDto(2L);
@@ -160,13 +161,12 @@ class UserPaymentListTest {
         );
 
         List<MyPaymentResponseDto> ticket = userService.getTicket(userId);
-        List<PaidSeat> seatList1 = ticket.get(0).getSeatList();
-        for (PaidSeat paidSeat : seatList1) {
-            System.out.println("paidSeat.getSeatName() = " + paidSeat.getSeatName());
+        List<PaidSeat> paidSeatList = ticket.get(0).getSeatList();
+        for (PaidSeat s : paidSeatList) {
+            System.out.println("paidSeatResponseDto = " + s.getSeatName());
         }
 
         Assertions.assertEquals(CASH, ticket.get(0).getPayment());
-
-
     }
+
 }

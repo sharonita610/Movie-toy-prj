@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback
+@Rollback(value = false)
 class UserFacadeServiceTest {
 
 
@@ -83,15 +83,15 @@ class UserFacadeServiceTest {
     void cancelPayment() {
 
         User user = userRepository.save(User.builder()
-                .name("user")
+                .name("user2")
                 .birthdate(LocalDate.parse("2020-01-01"))
-                .mail("test1")
+                .mail("test2")
                 .role(COMMON)
                 .rank(Rank.GOLD)
                 .password("1111")
                 .build());
         Long userId = user.getId();
-        // given
+
         Movie movie1 = movieRepository.save(Movie.builder()
                 .name("타짜")
                 .genre("코미디")
@@ -108,7 +108,7 @@ class UserFacadeServiceTest {
         for (int i = 1; i < 11; i++) {
             seatService.save(
                     SaveSeatRequestDto.builder()
-                            .name("A" + i)
+                            .name("B" + i)
                             .theaterId(gangNam)
                             .status(Sold.ABLE)
                             .build());
@@ -127,8 +127,8 @@ class UserFacadeServiceTest {
 
         Long scheduleId = schedule.getId();
 
-        SeatSelectedDto dto = new SeatSelectedDto(3L);
-        SeatSelectedDto dto1 = new SeatSelectedDto(4L);
+        SeatSelectedDto dto = new SeatSelectedDto(11L);
+        SeatSelectedDto dto1 = new SeatSelectedDto(13L);
 
         List<SeatSelectedDto> seatList = new ArrayList<>();
         seatList.add(dto);

@@ -27,33 +27,27 @@ public class UserFacadeService {
 
     private final UserService userService;
     private final PaymentService paymentService;
-    private final SeatService seatService;
-    private final PaidSeatService paidSeatService;
+
     public boolean cancel(Long id, Long paymentId) {
         List<MyPaymentResponseDto> ticket = userService.getTicket(id);
         findMyPayment(paymentId, ticket);
-//        cancelSeatStatus(paymentId);
         cancelPayment(paymentId);
+        cancelSeatStatus(paymentId);
         return true;
     }
-//
-//    private void cancelSeatStatus(Long paymentId) {
-//        List<PaidSeatResponseDto> paidSeats = paidSeatService.findByPayId(paymentId);
-//        int size = paidSeats.size();
-//        System.out.println("size = " + size);
-//
-//        for (PaidSeatResponseDto paidSeat : paidSeats) {
-//            String seatName = paidSeat.getPaidSeatName();
-//            Seat seat = seatService.findByName(seatName);
-//            Sold status = seat.getStatus();
-//            if (status == Sold.SOLD) {
-//                status = Sold.ABLE;
-//                seat.updateStatus(status);
-//
-//            }
-//        }
-//
-//    }
+
+    private void cancelSeatStatus(Long paymentId) {
+        Payment payment = paymentService.findById(paymentId);
+        List<Seat> seats = payment.getSchedule().getTheater().getSeats();
+        for (Seat seat : seats) {
+            Sold status = seat.getStatus();
+            if (status == Sold.SOLD) {
+                status = Sold.ABLE;
+                seat.updateStatus(status);
+
+            }
+        }
+    }
 
     private void cancelPayment(Long paymentId) {
         Payment payment = paymentService.findById(paymentId);
@@ -63,7 +57,7 @@ public class UserFacadeService {
         else payment.cancelPayment("CANCEL", LocalDateTime.now());
     }
 
-    private static void findMyPayment(Long paymentId, List<MyPaymentResponseDto> ticket) {
+    private void findMyPayment(Long paymentId, List<MyPaymentResponseDto> ticket) {
         boolean payIdExist = ticket.stream()
                 .map(MyPaymentResponseDto::getPaymentId)
                 .anyMatch(rawId -> rawId.equals(paymentId));
