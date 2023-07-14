@@ -3,8 +3,7 @@ package com.example.domain.user.domain.response;
 import com.example.domain.payment.domain.PaidSeat;
 import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.PaymentType;
-import com.example.domain.payment.domain.response.PaidSeatResponseDto;
-import com.example.domain.seat.domain.Seat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Builder
 @Getter
@@ -35,13 +35,13 @@ public class MyPaymentResponseDto {
     private LocalDateTime endTime;
 
 
-    public MyPaymentResponseDto(Payment payment) {
+    public MyPaymentResponseDto(Payment payment, List<PaidSeat> seatList) {
         this.paymentId = payment.getId();
         this.scheduleId = payment.getSchedule().getId();
         this.count = payment.getCount();
         this.payment = payment.getPayment();
         this.amountToPay = payment.getAmount();
-        this.seatList = payment.getSeatList();
+        this.seatList = seatList;
         this.title = payment.getSchedule().getMovie().getName();
         this.genre = payment.getSchedule().getMovie().getGenre();
         this.theater = payment.getSchedule().getTheater().getName();

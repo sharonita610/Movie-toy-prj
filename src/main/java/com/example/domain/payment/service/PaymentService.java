@@ -38,4 +38,10 @@ public class PaymentService {
                 () -> new CustomException(PAYMENT_NOT_FOUND.getMessage(), PAYMENT_NOT_FOUND)
         );
     }
+
+    public List<Payment> findAll(Long userId) {
+        List<Payment> allByUserId = paymentRepository.findByUserId(userId);
+        return allByUserId;
+    }
+
 }

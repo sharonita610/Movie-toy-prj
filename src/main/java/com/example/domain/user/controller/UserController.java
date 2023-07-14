@@ -58,7 +58,7 @@ public class UserController {
 
     @GetMapping("/{id}/ticket")
     public ResponseEntity<List<MyPaymentResponseDto>> getTicket(@PathVariable Long id){
-        return ResponseEntity.ok().body(userService.getTicket(id));
+        return ResponseEntity.ok().body(facadeService.getTicket(id));
     }
 
     @PatchMapping("/{id}/{paymentId}")

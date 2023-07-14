@@ -49,7 +49,7 @@ public class PaymentFacadeService {
         return true;
     }
 
-    private void savePaidSeat(List<SeatSelectedDto> seatList, Payment payment) {
+    public void savePaidSeat(List<SeatSelectedDto> seatList, Payment payment) {
         for (SeatSelectedDto selectedDto : seatList) {
             Seat seat = seatService.findById(selectedDto.getSeatId());
             paidSeatService.save(seat.getName(), payment);

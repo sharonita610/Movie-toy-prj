@@ -16,7 +16,7 @@ public class PaidSeat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "paid_Seat_id")
+    @Column(name = "paid_seat_id")
     private long id;
 
     private String seatName;

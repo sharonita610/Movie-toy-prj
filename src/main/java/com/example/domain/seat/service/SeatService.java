@@ -5,13 +5,11 @@ import com.example.domain.seat.domain.Seat;
 import com.example.domain.seat.domain.response.SeatListResponseDto;
 import com.example.domain.seat.repository.SeatRepository;
 import com.example.global.exception.CustomException;
-import com.example.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.global.exception.ErrorCode.SEAT_NOT_FOUND;
 import static java.util.stream.Collectors.toList;
@@ -42,9 +40,4 @@ public class SeatService {
         );
     }
 
-    public Seat findByName(String seatName) {
-        return seatRepository.findByName(seatName).orElseThrow(
-                () -> new CustomException(SEAT_NOT_FOUND.getMessage(), SEAT_NOT_FOUND)
-        );
-    }
 }
