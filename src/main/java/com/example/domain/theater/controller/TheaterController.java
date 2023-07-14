@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/theater")
+@RequestMapping("/theaters")
 public class TheaterController {
 
     private final SeatService seatService;

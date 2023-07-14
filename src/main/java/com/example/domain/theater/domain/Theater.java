@@ -3,6 +3,7 @@ package com.example.domain.theater.domain;
 import com.example.domain.seat.domain.Seat;
 import com.example.domain.theater.domain.request.UpdateTheaterRequestDto;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Theater {
     @OneToMany(mappedBy = "theater")
     private List<Seat> seats;
 
-    private int seatCount;
+    private Integer seatCount;
 
     public void updateTheaterInformation(UpdateTheaterRequestDto dto) {
        this.name = dto.getName();

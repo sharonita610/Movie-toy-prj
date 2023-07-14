@@ -39,7 +39,7 @@ import static com.example.domain.payment.domain.PaymentType.*;
 import static com.example.domain.user.domain.Role.COMMON;
 
 @SpringBootTest
-@Rollback(value = false)
+@Rollback
 @Transactional
 class PaymentFacadeServiceTest {
 

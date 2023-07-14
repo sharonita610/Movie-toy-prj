@@ -1,6 +1,5 @@
 package com.example.domain.user.service;
 
-import com.example.domain.payment.domain.Payment;
 import com.example.domain.user.domain.Rank;
 import com.example.domain.user.domain.request.UpgradeUserRankRequestDto;
 import com.example.domain.user.domain.request.UpdateUserRequestDto;
@@ -56,11 +55,6 @@ public class UserService {
         encodePassword(dto.getPassword());
         findById(id).updateUser(dto);
         return getUserDetailResponseDto(id);
-    }
-
-    public List<MyPaymentResponseDto> getTicket(Long id) {
-        findById(id);
-        return userRepository.findPaymentListByUserId(id).stream().map(MyPaymentResponseDto::new).collect(toList());
     }
 
     public boolean signOut(Long id) {

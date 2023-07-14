@@ -47,6 +47,7 @@ public class FixPaymentRequestDto {
                 .amount(getAmountToPay())
                 .user(user)
                 .schedule(schedule)
+                .seatList(List.of())
                 .build();
 
     }

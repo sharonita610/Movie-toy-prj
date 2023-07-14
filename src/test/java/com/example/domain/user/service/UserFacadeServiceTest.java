@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+@Rollback
 class UserFacadeServiceTest {
 
 
@@ -127,8 +127,8 @@ class UserFacadeServiceTest {
 
         Long scheduleId = schedule.getId();
 
-        SeatSelectedDto dto = new SeatSelectedDto(11L);
-        SeatSelectedDto dto1 = new SeatSelectedDto(13L);
+        SeatSelectedDto dto = new SeatSelectedDto(1L);
+        SeatSelectedDto dto1 = new SeatSelectedDto(2L);
 
         List<SeatSelectedDto> seatList = new ArrayList<>();
         seatList.add(dto);
