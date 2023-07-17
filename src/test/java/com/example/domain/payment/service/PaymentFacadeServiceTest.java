@@ -1,27 +1,15 @@
 package com.example.domain.payment.service;
 
-import com.example.domain.movie.domain.Movie;
-import com.example.domain.movie.repository.MovieRepository;
-import com.example.domain.payment.domain.Payment;
 import com.example.domain.payment.domain.request.FixPaymentRequestDto;
 import com.example.domain.payment.domain.request.PaymentRequestDto;
 import com.example.domain.payment.domain.response.PaymentResponseDto;
 import com.example.domain.payment.domain.request.SeatSelectedDto;
-import com.example.domain.schedule.domain.request.SaveScheduleRequestDto;
-import com.example.domain.schedule.domain.response.ScheduleListResponseDto;
 import com.example.domain.schedule.service.ScheduleFacadeService;
 import com.example.domain.schedule.service.ScheduleService;
 import com.example.domain.seat.domain.Sold;
-import com.example.domain.seat.domain.request.SaveSeatRequestDto;
 import com.example.domain.seat.domain.response.SeatListResponseDto;
-import com.example.domain.seat.repository.SeatRepository;
 import com.example.domain.seat.service.SeatService;
-import com.example.domain.theater.domain.Theater;
-import com.example.domain.theater.repository.TheaterRepository;
-import com.example.domain.user.domain.Rank;
-import com.example.domain.user.domain.User;
-import com.example.domain.user.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +18,14 @@ import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.domain.payment.domain.PaymentType.*;
-import static com.example.domain.user.domain.Role.COMMON;
+import static com.example.domain.seat.domain.Sold.ABLE;
+import static com.example.domain.seat.domain.Sold.SOLD;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Rollback
@@ -53,178 +42,127 @@ class PaymentFacadeServiceTest {
     ScheduleFacadeService scheduleFacadeService;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    MovieRepository movieRepository;
-
-    @Autowired
-    TheaterRepository theaterRepository;
-
-    @Autowired
-    SeatRepository seatRepository;
-
-    @Autowired
     PaymentFacadeService paymentFacadeService;
 
     @Autowired
     PaymentService paymentService;
 
+    Long scheduleId = 10L;
+    Long silverUser =5L;
+    Long vipUser =6L;
+
+    PaymentResponseDto vipPrice;
+
     @Test
-    @DisplayName("스케줄 id, 좌석 갯수, 좌석id 및 랭크 를 사용하여 결제 금액을 확인 할 수 있다.")
-    void getPayment() {
+    @DisplayName("Silver 랭크 유저는 결제금액을 확인 할 때 10%의 할인을 제공 받을 수 있다.")
+    void getSilverUserPayment() {
 
-        User user = userRepository.save(User.builder()
-                .name("user1")
-                .birthdate(LocalDate.parse("2020-01-01"))
-                .mail("test2")
-                .role(COMMON)
-                .rank(Rank.GOLD)
-                .password("1111")
-                .build());
-        Long userId = user.getId();
         // given
-        Movie movie1 = movieRepository.save(Movie.builder()
-                .name("타짜")
-                .genre("코미디")
-                .release(LocalDate.parse("2023-06-29"))
-                .build());
-        Long movieId = movie1.getId();
+        List<SeatListResponseDto> seatListByScheduleId = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
 
-        Theater gangNam = theaterRepository.save(Theater.builder()
-                .name("강남1관")
-                .location("강남역")
-                .build());
-        Long theaterId = gangNam.getId();
+        Long id1 = seatListByScheduleId.get(6).getId();
+        Long id2 = seatListByScheduleId.get(7).getId();
+        Long id3 = seatListByScheduleId.get(8).getId();
 
-        for (int i = 1; i < 11; i++) {
-            seatService.save(
-                    SaveSeatRequestDto.builder()
-                            .name("A" + i)
-                            .status(Sold.ABLE)
-                            .theaterId(gangNam)
-                            .build());
-
-        }
-        // given
-        scheduleFacadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-05T12:00")).build());
-
-
-        List<ScheduleListResponseDto> scheduleList = scheduleService.findAllByMovieId(movieId);
-
-        ScheduleListResponseDto schedule = scheduleList.get(0);
-
-        Long scheduleId = schedule.getId();
-
-        List<SeatListResponseDto> list = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
-
-        SeatSelectedDto dto = new SeatSelectedDto(1L);
-        SeatSelectedDto dto1 = new SeatSelectedDto(2L);
+        SeatSelectedDto dto1 = new SeatSelectedDto(id1);
+        SeatSelectedDto dto2 = new SeatSelectedDto(id2);
+        SeatSelectedDto dto3 = new SeatSelectedDto(id3);
 
         List<SeatSelectedDto> seatList = new ArrayList<>();
-        seatList.add(dto);
         seatList.add(dto1);
+        seatList.add(dto2);
+        seatList.add(dto3);
 
+        // when
         PaymentResponseDto price = paymentFacadeService.getPrice(scheduleId,
-
                 PaymentRequestDto.builder()
                         .scheduleId(scheduleId)
-                        .count(2)
+                        .count(seatList.size())
                         .seatList(seatList)
                         .payment(CASH)
-                        .userId(userId)
+                        .userId(silverUser)
                         .build());
 
-        Assertions.assertEquals(16000.0, price.getAmountToPay());
-
+        // then
+        assertEquals(27000.0, price.getAmountToPay());
 
     }
 
     @Test
-    @DisplayName("response 받은 값들을 통해 payment 저장 및 좌석 status 변경하기")
+    @DisplayName("Vip 랭크 유저는 결제금액을 확인 할 때 30%의 할인을 제공 받을 수 있다.")
+    void getVipUserPayment() {
+
+        // given
+        vipUserPayment();
+
+        // then
+        assertEquals(28000.0, vipPrice.getAmountToPay());
+    }
+
+
+
+    @Test
+    @DisplayName("Vip 유저가 선택 한 인원수와 좌석을 토대로 결제를 하고 결제 된 건 으로 좌석의 status 를 변경 할 수 있다.")
     void postPayment() {
 
-        User user = userRepository.save(User.builder()
-                .name("user")
-                .birthdate(LocalDate.parse("2020-01-01"))
-                .mail("test1")
-                .role(COMMON)
-                .rank(Rank.GOLD)
-                .password("1111")
-                .build());
-        Long userId = user.getId();
         // given
-        Movie movie1 = movieRepository.save(Movie.builder()
-                .name("타짜")
-                .genre("코미디")
-                .release(LocalDate.parse("2023-06-29"))
-                .build());
-        Long movieId = movie1.getId();
+        vipUserPayment();
 
-        Theater gangNam = theaterRepository.save(Theater.builder()
-                .name("강남1관")
-                .location("강남역")
-                .build());
-        Long theaterId = gangNam.getId();
-
-        for (int i = 1; i < 11; i++) {
-            seatService.save(
-                    SaveSeatRequestDto.builder()
-                            .name("A" + i)
-                            .theaterId(gangNam)
-                            .status(Sold.ABLE)
-                            .build());
-
-        }
-        // given
-        scheduleFacadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-05T12:00")).build());
-
-
-        List<ScheduleListResponseDto> scheduleList = scheduleService.findAllByMovieId(movieId);
-
-        ScheduleListResponseDto schedule = scheduleList.get(0);
-
-        Long scheduleId = schedule.getId();
-
-        List<SeatListResponseDto> list = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
-
-        SeatSelectedDto dto = new SeatSelectedDto(1L);
-        SeatSelectedDto dto1 = new SeatSelectedDto(2L);
-
-        List<SeatSelectedDto> seatList = new ArrayList<>();
-        seatList.add(dto);
-        seatList.add(dto1);
-
-        PaymentResponseDto price = paymentFacadeService.getPrice(scheduleId,
-
-                PaymentRequestDto.builder()
-                        .scheduleId(scheduleId)
-                        .count(2)
-                        .seatList(seatList)
-                        .payment(CASH)
-                        .userId(userId)
-                        .build());
-
-
-        paymentFacadeService.payMyMovie(
+        boolean b = paymentFacadeService.payMyMovie(
                 scheduleId, FixPaymentRequestDto.builder()
-                        .amountToPay(price.getAmountToPay())
-                        .count(2)
-                        .payment(CASH)
-                        .seatList(seatList)
-                        .userId(userId)
-                        .scheduleId(scheduleId)
+                        .amountToPay(vipPrice.getAmountToPay())
+                        .count(vipPrice.getCount())
+                        .payment(vipPrice.getPaymentType())
+                        .seatList(vipPrice.getSeatList())
+                        .userId(vipUser)
+                        .scheduleId(vipPrice.getScheduleId())
                         .build()
         );
 
-        Assertions.assertEquals(16000.0, price.getAmountToPay());
+        // then
+        List<SeatListResponseDto> seatListByScheduleId1 = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
+        Sold status1 = seatListByScheduleId1.get(6).getStatus();
+        Sold status2 = seatListByScheduleId1.get(7).getStatus();
+        Sold status3 = seatListByScheduleId1.get(8).getStatus();
+        Sold status4 = seatListByScheduleId1.get(9).getStatus();
+        Sold status5 = seatListByScheduleId1.get(5).getStatus();
 
+        assertTrue(b);
+        assertEquals(SOLD,status1);
+        assertEquals(SOLD,status2);
+        assertEquals(SOLD,status3);
+        assertEquals(SOLD,status4);
+        assertEquals(ABLE,status5);
 
+    }
+
+    private void vipUserPayment() {
+        List<SeatListResponseDto> seatListByScheduleId = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
+
+        Long id1 = seatListByScheduleId.get(6).getId();
+        Long id2 = seatListByScheduleId.get(7).getId();
+        Long id3 = seatListByScheduleId.get(8).getId();
+        Long id4 = seatListByScheduleId.get(9).getId();
+
+        SeatSelectedDto dto1 = new SeatSelectedDto(id1);
+        SeatSelectedDto dto2 = new SeatSelectedDto(id2);
+        SeatSelectedDto dto3 = new SeatSelectedDto(id3);
+        SeatSelectedDto dto4 = new SeatSelectedDto(id4);
+
+        List<SeatSelectedDto> seatList = new ArrayList<>();
+        seatList.add(dto1);
+        seatList.add(dto2);
+        seatList.add(dto3);
+        seatList.add(dto4);
+
+        // when
+        vipPrice = paymentFacadeService.getPrice(scheduleId,
+                PaymentRequestDto.builder()
+                        .scheduleId(scheduleId)
+                        .count(seatList.size())
+                        .seatList(seatList)
+                        .payment(CASH)
+                        .userId(vipUser)
+                        .build());
     }
 }
