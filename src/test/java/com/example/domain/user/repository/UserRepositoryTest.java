@@ -38,7 +38,7 @@ class UserRepositoryTest {
     }
     @Test
     @DisplayName("ID 중복 체크 성공 테스트, 답이 empty 어야한다")
-    void idfalse(){
+    void idFalse(){
         // given
         String id = "hkd1";
 

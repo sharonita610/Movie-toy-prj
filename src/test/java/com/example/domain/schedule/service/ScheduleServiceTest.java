@@ -43,6 +43,7 @@ class ScheduleServiceTest {
     @Autowired
     TheaterRepository theaterRepository;
 
+    Long  id = 5L;
     @Test
     @DisplayName("영화 스케줄을 등록 할 수 있다.")
     void addSchedule() {
@@ -59,6 +60,7 @@ class ScheduleServiceTest {
                 .build());
 
         Long theaterId = gangNam.getId();
+
 
 
         // given
