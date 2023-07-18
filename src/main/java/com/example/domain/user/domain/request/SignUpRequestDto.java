@@ -26,7 +26,6 @@ public class SignUpRequestDto {
     @NotBlank
     private String password;
 
-    @NotBlank
     private Role role;
 
 

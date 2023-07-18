@@ -7,6 +7,7 @@ import com.example.domain.movie.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,16 +25,19 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.getList(pageable));
     }
 
+    @PreAuthorize("hasRole('Role_ADMIN')")
     @PostMapping
-    public ResponseEntity<Boolean> saveMovie(@Validated SaveMovieRequestDto dto) {
+    public ResponseEntity<Boolean> saveMovie(@Validated @RequestBody SaveMovieRequestDto dto) {
         return ResponseEntity.ok().body(movieService.save(dto));
     }
 
+    @PreAuthorize("hasRole('Role_ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<Boolean> updateMovie(@PathVariable Long id, @Validated UpdateMovieRequestDto dto) {
+    public ResponseEntity<Boolean> updateMovie(@PathVariable Long id, @Validated @RequestBody UpdateMovieRequestDto dto) {
         return ResponseEntity.ok().body(movieService.updateById(id, dto));
     }
 
+    @PreAuthorize("hasRole('Role_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteMovie(@PathVariable Long id) {
         return ResponseEntity.ok().body(movieService.deleteById(id));

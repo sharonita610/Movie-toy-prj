@@ -12,6 +12,7 @@ import com.example.domain.schedule.service.ScheduleService;
 import com.example.domain.seat.domain.Sold;
 import com.example.domain.seat.domain.response.SeatListResponseDto;
 import com.example.global.exception.CustomException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +65,7 @@ class UserFacadeServiceTest {
         Long id = seatListByScheduleId.get(0).getId();
         Long id1 = seatListByScheduleId.get(2).getId();
 
-        SeatSelectedDto dto = new SeatSelectedDto(id);
-        SeatSelectedDto dto1 = new SeatSelectedDto(id1);
-
-        List<SeatSelectedDto> seatList = new ArrayList<>();
-        seatList.add(dto);
-        seatList.add(dto1);
+        List<SeatSelectedDto> seatList = selectAndSaveSeat(id, id1);
 
         PaymentResponseDto price = paymentFacadeService.getPrice(afterTime,
                 PaymentRequestDto.builder()
@@ -104,6 +100,17 @@ class UserFacadeServiceTest {
         );
     }
 
+    @NotNull
+    private static List<SeatSelectedDto> selectAndSaveSeat(Long id, Long id1) {
+        SeatSelectedDto dto = new SeatSelectedDto(id);
+        SeatSelectedDto dto1 = new SeatSelectedDto(id1);
+
+        List<SeatSelectedDto> seatList = new ArrayList<>();
+        seatList.add(dto);
+        seatList.add(dto1);
+        return seatList;
+    }
+
 
     @Test
     @DisplayName("유저가 상영 시간 전에 구매 내역 취소요청 하면 결제 취소 및 status 가 변경 되어야 한다.")
@@ -114,12 +121,7 @@ class UserFacadeServiceTest {
         Long id = seatListByScheduleId.get(5).getId();
         Long id1 = seatListByScheduleId.get(6).getId();
 
-        SeatSelectedDto dto = new SeatSelectedDto(id);
-        SeatSelectedDto dto1 = new SeatSelectedDto(id1);
-
-        List<SeatSelectedDto> seatList = new ArrayList<>();
-        seatList.add(dto);
-        seatList.add(dto1);
+        List<SeatSelectedDto> seatList = selectAndSaveSeat(id, id1);
 
         PaymentResponseDto price = paymentFacadeService.getPrice(beforeTime,
                 PaymentRequestDto.builder()

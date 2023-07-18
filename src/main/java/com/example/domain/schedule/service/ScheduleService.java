@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.global.exception.ErrorCode.SCHEDULE_NOT_FOUND;
 import static java.util.stream.Collectors.*;
 
 @Service
@@ -36,7 +37,7 @@ public class ScheduleService {
 
     public Schedule findById(Long id){
         return scheduleRepository.findById(id).orElseThrow(
-                () -> new CustomException(ErrorCode.SCHEDULE_NOT_FOUND)
+                () -> new CustomException(SCHEDULE_NOT_FOUND.getMessage(), SCHEDULE_NOT_FOUND)
         );
     }
 }

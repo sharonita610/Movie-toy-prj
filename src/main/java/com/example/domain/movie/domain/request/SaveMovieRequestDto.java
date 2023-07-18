@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -18,7 +19,7 @@ public class SaveMovieRequestDto {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private LocalDate release;
 
     @NotBlank

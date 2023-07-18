@@ -34,61 +34,44 @@ class ScheduleServiceTest {
     @Autowired
     ScheduleFacadeService facadeService;
 
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    MovieRepository movieRepository;
-
-    @Autowired
-    TheaterRepository theaterRepository;
-
-    Long  id = 5L;
     @Test
     @DisplayName("영화 스케줄을 등록 할 수 있다.")
     void addSchedule() {
-        Movie movie1 = movieRepository.save(Movie.builder()
-                .name("타짜")
-                .genre("코미디")
-                .release(LocalDate.parse("2023-06-29"))
-                .build());
-        Long movieId = movie1.getId();
-
-        Theater gangNam = theaterRepository.save(Theater.builder()
-                .name("강남1관")
-                .location("강남역")
-                .build());
-
-        Long theaterId = gangNam.getId();
-
-
 
         // given
-        SaveScheduleRequestDto build = SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-05T12:00")).build();
 
-        Long aLong = facadeService.saveSchedule(build);
+        Long schedule1 = facadeService.saveSchedule(SaveScheduleRequestDto.builder()
+                .movieId(1L)
+                .theaterId(1L)
+                .time(LocalDateTime.parse("2023-07-18T12:00")).build());
 
-        facadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-05T18:00")).build());
+        Long schedule2 = facadeService.saveSchedule(SaveScheduleRequestDto.builder()
+                .movieId(1L)
+                .theaterId(3L)
+                .time(LocalDateTime.parse("2023-07-18T18:00")).build());
 
-        facadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-06T12:00")).build());
+        Long schedule3 = facadeService.saveSchedule(SaveScheduleRequestDto.builder()
+                .movieId(2L)
+                .theaterId(2L)
+                .time(LocalDateTime.parse("2023-07-18T12:00")).build());
 
-        facadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-07T18:00")).build());
+        Long schedule4 = facadeService.saveSchedule(SaveScheduleRequestDto.builder()
+                .movieId(3L)
+                .theaterId(4L)
+                .time(LocalDateTime.parse("2023-07-18T18:00")).build());
 
         // when
-        assertEquals(1,aLong);
+        String name1 = scheduleService.findById(schedule1).getMovie().getName();
+        String name2= scheduleService.findById(schedule2).getTheater().getName();
+        String name3 = scheduleService.findById(schedule3).getMovie().getName();
+        String name4 = scheduleService.findById(schedule4).getTheater().getName();
 
+        // then
+        assertEquals("도둑들", name1);
+        assertEquals("강남3관", name2);
+        assertEquals("FAST AND FURIOUS", name3);
+        assertEquals("홍대1관", name4);
 
     }
 
@@ -96,60 +79,14 @@ class ScheduleServiceTest {
     @DisplayName("영화id 로 스케줄 리스트를 조회 할 수 있다.")
     void scheduleList() {
         // given
-        Movie movie1 = movieRepository.save(Movie.builder()
-                .name("타짜")
-                .genre("코미디")
-                .release(LocalDate.parse("2023-06-29"))
-                .build());
-        Long movieId = movie1.getId();
-
-        Theater gangNam = theaterRepository.save(Theater.builder()
-                .name("강남1관")
-                .location("강남역")
-                .build());
-
-        Long theaterId = gangNam.getId();
-
-
-        // given
-        SaveScheduleRequestDto build = SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-05T12:00")).build();
-
-        Long aLong = facadeService.saveSchedule(build);
-        long l = aLong.longValue();
-        System.out.println("l = " + l);
-
-        facadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-05T18:00")).build());
-
-        facadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-06T12:00")).build());
-
-        facadeService.saveSchedule(SaveScheduleRequestDto.builder()
-                .movieId(movieId)
-                .theaterId(theaterId)
-                .time(LocalDateTime.parse("2023-07-07T18:00")).build());
+        long movieId = 4L;
 
         // when
         List<ScheduleListResponseDto> scheduleList = scheduleService.findAllByMovieId(movieId);
 
-        for (ScheduleListResponseDto d : scheduleList) {
-            System.out.println("d = " + d.getName());
-            System.out.println("d.getTheater() = " + d.getTheater());
-            System.out.println(d.getTime());
-
-        }
-
         // then
         assertEquals(4, scheduleList.size());
-
-
+        assertEquals("타짜", scheduleList.get(0).getName());
     }
 
 }
