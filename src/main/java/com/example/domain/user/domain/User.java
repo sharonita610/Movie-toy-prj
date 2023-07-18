@@ -3,6 +3,7 @@ package com.example.domain.user.domain;
 import com.example.domain.payment.domain.Payment;
 import com.example.domain.user.domain.request.UpdateUserRequestDto;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -39,13 +40,13 @@ public class User {
     @Column(name = "user_pwd", nullable = false)
     private String password;
 
-    @Builder.Default
     @Column(name = "user_rank")
-    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'STANDARD'")
     private Rank rank = Rank.STANDARD;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'COMMON'")
     private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

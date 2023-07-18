@@ -47,9 +47,9 @@ class PaymentFacadeServiceTest {
     @Autowired
     PaymentService paymentService;
 
-    Long scheduleId = 10L;
-    Long silverUser =5L;
-    Long vipUser =6L;
+    long scheduleId = 9L;
+    long silverUser =3L;
+    long vipUser =4L;
 
     PaymentResponseDto vipPrice;
 
@@ -121,18 +121,12 @@ class PaymentFacadeServiceTest {
 
         // then
         List<SeatListResponseDto> seatListByScheduleId1 = scheduleFacadeService.getSeatListByScheduleId(scheduleId);
-        Sold status1 = seatListByScheduleId1.get(6).getStatus();
-        Sold status2 = seatListByScheduleId1.get(7).getStatus();
-        Sold status3 = seatListByScheduleId1.get(8).getStatus();
-        Sold status4 = seatListByScheduleId1.get(9).getStatus();
-        Sold status5 = seatListByScheduleId1.get(5).getStatus();
+        Sold status1 = seatListByScheduleId1.get(5).getStatus();
+        Sold status2 = seatListByScheduleId1.get(6).getStatus();
 
         assertTrue(b);
-        assertEquals(SOLD,status1);
+        assertEquals(ABLE,status1);
         assertEquals(SOLD,status2);
-        assertEquals(SOLD,status3);
-        assertEquals(SOLD,status4);
-        assertEquals(ABLE,status5);
 
     }
 

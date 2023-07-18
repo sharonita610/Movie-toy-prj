@@ -4,6 +4,7 @@ import com.example.domain.user.domain.request.LoginRequestDto;
 import com.example.domain.user.domain.request.UpgradeUserRankRequestDto;
 import com.example.domain.user.domain.request.UpdateUserRequestDto;
 import com.example.domain.user.domain.request.SignUpRequestDto;
+import com.example.domain.user.domain.response.LoginResponseDto;
 import com.example.domain.user.domain.response.MyPaymentResponseDto;
 import com.example.domain.user.domain.response.UserDetailResponseDto;
 import com.example.domain.user.domain.response.SignUpResponseDto;
@@ -27,12 +28,11 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseDto> signUp(@Validated @RequestBody SignUpRequestDto dto, BindingResult result) {
-            SignUpResponseDto signUpDto = userService.signUp(dto);
-            return ResponseEntity.ok().body(signUpDto);
+            return ResponseEntity.ok().body(userService.signUp(dto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> logIn(@Validated @RequestBody LoginRequestDto dto){
+    public ResponseEntity<LoginResponseDto> logIn(@Validated @RequestBody LoginRequestDto dto){
         return ResponseEntity.ok().body(userService.logIn(dto));
     }
 

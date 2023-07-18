@@ -2,6 +2,7 @@ package com.example.domain.seat.domain;
 
 import com.example.domain.theater.domain.Theater;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -23,8 +24,9 @@ public class Seat {
     @Column(name = "seat_name")
     private String name;
 
-    @Builder.Default
-    private Sold status = Sold.ABLE;
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ABLE'")
+    private Sold status;
 
     @ManyToOne
     @JoinColumn(name= "theater_id")

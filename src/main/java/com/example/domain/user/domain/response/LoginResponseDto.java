@@ -13,10 +13,12 @@ public class LoginResponseDto {
     private String name;
     private Rank rank;
     private String phone;
+    private String token;
 
-    public LoginResponseDto(User user) {
+    public LoginResponseDto(User user, String token) {
         this.name = user.getName();
         this.rank = user.getRank();
         this.phone = user.getPhone();
+        this.token = token;
     }
 }

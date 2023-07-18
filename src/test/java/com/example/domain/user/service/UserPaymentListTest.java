@@ -8,7 +8,6 @@ import com.example.domain.payment.service.PaymentFacadeService;
 import com.example.domain.schedule.service.ScheduleFacadeService;
 import com.example.domain.seat.domain.response.SeatListResponseDto;
 import com.example.domain.user.domain.response.MyPaymentResponseDto;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
