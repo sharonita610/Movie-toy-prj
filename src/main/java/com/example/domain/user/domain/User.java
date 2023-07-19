@@ -24,7 +24,6 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @NotBlank
     @Column(name = "user_name")
     private String name;
 
@@ -41,8 +40,9 @@ public class User {
     private String password;
 
     @Column(name = "user_rank")
+    @Enumerated(EnumType.STRING)
     @ColumnDefault("'STANDARD'")
-    private Rank rank = Rank.STANDARD;
+    private Rank rank;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
