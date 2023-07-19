@@ -7,6 +7,7 @@ import com.example.domain.schedule.service.ScheduleService;
 import com.example.domain.seat.domain.response.SeatListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class ScheduleController {
         return ResponseEntity.ok().body(facadeService.saveSchedule(dto));
     }
 
+    @PreAuthorize("hasRole('Role_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteSchedule(@PathVariable Long id){
         return ResponseEntity.ok().body(scheduleService.deleteById(id));
