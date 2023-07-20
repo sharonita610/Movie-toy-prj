@@ -46,8 +46,8 @@ public class User {
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("'COMMON'")
-    private Role role;
+    @Builder.Default
+    private Role role = Role.valueOf("COMMON");
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Payment> paymentList = new ArrayList<>();

@@ -1,10 +1,12 @@
 package com.example.domain.user.domain.request;
 
+import com.example.domain.user.domain.Rank;
 import com.example.domain.user.domain.Role;
 import com.example.domain.user.domain.User;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -26,7 +28,11 @@ public class SignUpRequestDto {
     @NotBlank
     private String password;
 
+    @NotNull
     private Role role;
+
+    @NotNull
+    private Rank rank;
 
 
     public User toEntity(String encodedPassword) {
@@ -37,6 +43,7 @@ public class SignUpRequestDto {
                 .birthdate(birthdate)
                 .mail(mail)
                 .role(role)
+                .rank(rank)
                 .password(encodedPassword)
                 .build();
     }
