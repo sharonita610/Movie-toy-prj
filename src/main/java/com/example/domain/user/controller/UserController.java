@@ -29,7 +29,7 @@ public class UserController {
     private final UserFacadeService facadeService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponseDto> signUp(@Valid @RequestBody SignUpRequestDto dto) {
+    public ResponseEntity<SignUpResponseDto> signUp(@Validated @RequestBody SignUpRequestDto dto) {
             return ResponseEntity.ok().body(userService.signUp(dto));
     }
 

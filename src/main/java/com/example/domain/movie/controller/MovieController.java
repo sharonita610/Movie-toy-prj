@@ -25,19 +25,18 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.getList(pageable));
     }
 
-    @PreAuthorize("hasRole('Role_ADMIN')")
     @PostMapping
     public ResponseEntity<Boolean> saveMovie(@Validated @RequestBody SaveMovieRequestDto dto) {
         return ResponseEntity.ok().body(movieService.save(dto));
     }
 
-    @PreAuthorize("hasRole('Role_ADMIN')")
-    @PatchMapping("/{id}")
+
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<Boolean> updateMovie(@PathVariable Long id, @Validated @RequestBody UpdateMovieRequestDto dto) {
         return ResponseEntity.ok().body(movieService.updateById(id, dto));
     }
 
-    @PreAuthorize("hasRole('Role_ADMIN')")
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteMovie(@PathVariable Long id) {
         return ResponseEntity.ok().body(movieService.deleteById(id));

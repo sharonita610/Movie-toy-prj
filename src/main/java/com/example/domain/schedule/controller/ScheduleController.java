@@ -26,7 +26,6 @@ public class ScheduleController {
         return ResponseEntity.ok().body(facadeService.saveSchedule(dto));
     }
 
-    @PreAuthorize("hasRole('Role_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteSchedule(@PathVariable Long id){
         return ResponseEntity.ok().body(scheduleService.deleteById(id));

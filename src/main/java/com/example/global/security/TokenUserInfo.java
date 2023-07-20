@@ -15,4 +15,8 @@ public class TokenUserInfo {
     private Long userId;
     private String mail;
     private Role role;
+
+    public String getRole(){
+        return "ROLE_" + role;
+    }
 }
