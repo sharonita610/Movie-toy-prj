@@ -30,8 +30,7 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.save(dto));
     }
 
-
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    @PatchMapping("/{id}")
     public ResponseEntity<Boolean> updateMovie(@PathVariable Long id, @Validated @RequestBody UpdateMovieRequestDto dto) {
         return ResponseEntity.ok().body(movieService.updateById(id, dto));
     }
