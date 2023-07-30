@@ -31,6 +31,9 @@ public class Movie {
     @Column(name = "movie_genre")
     private String genre;
 
+    @Column(name = "movie_photo")
+    private String photo;
+
 
     public void updateMovie(UpdateMovieRequestDto dto) {
         this.name = dto.getName();

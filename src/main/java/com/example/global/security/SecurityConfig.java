@@ -31,8 +31,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.addFilterBefore(
-                jwtAuthFilter
-                , CorsFilter.class
+                jwtAuthFilter,
+                CorsFilter.class
         );
         http
                 .cors()
@@ -44,11 +44,11 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers("/users/signup", "/users/login","/theaters", "/theaters/**", "/schedules/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/movies","/seats").permitAll()
+                .antMatchers("/users/signup", "/users/login", "/theaters", "/theaters/**", "/schedules/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/movies", "/seats").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/users/{id}", "/theaters").access("hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.POST, "/seats", "/theaters", "/schedules").access("hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.DELETE, "/theaters", "/schedules","/movies").access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/theaters", "/schedules", "/movies").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/movies/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/users/**", "/payments", "/payments/**").authenticated()
         ;

@@ -11,7 +11,6 @@ import com.example.domain.user.domain.response.SignUpResponseDto;
 import com.example.domain.user.domain.User;
 import com.example.domain.user.repository.UserRepository;
 import com.example.global.exception.CustomException;
-import com.example.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +29,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    private final TokenProvider tokenProvider;
 
     public SignUpResponseDto signUp(final SignUpRequestDto dto) {
         isDuplicatedMail(dto.getMail());
@@ -42,8 +40,8 @@ public class UserService {
     public LoginResponseDto logIn(LoginRequestDto dto) {
         User user = findByEmail(dto.getMail());
         checkPassword(dto.getPassword(), user.getPassword());
-        String token = tokenProvider.createToken(user);
-        return new LoginResponseDto(user, token);
+//        String token = tokenProvider.createToken(user);
+        return new LoginResponseDto(user);
     }
 
     public UserDetailResponseDto getDetail(Long id) {

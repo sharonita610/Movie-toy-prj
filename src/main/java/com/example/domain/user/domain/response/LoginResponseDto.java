@@ -15,10 +15,10 @@ public class LoginResponseDto {
     private String phone;
     private String token;
 
-    public LoginResponseDto(User user, String token) {
+    public LoginResponseDto(User user) {
         this.name = user.getName();
         this.rank = user.getRank();
         this.phone = user.getPhone();
-        this.token = token;
+//        this.token = token;
     }
 }
