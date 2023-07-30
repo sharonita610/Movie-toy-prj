@@ -4,20 +4,20 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:9000/movie
+    url: jdbc:mariadb://localhost:3306/movie
     username: root
-    password: admin
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 1234
+    driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
-
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.MariaDB106Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
-        format_sql: "true"
-    show-sql: true
+        format_sql: true
+    database: mysql
+
 
 logging.level:
   org.hibernate.SQL: debug
@@ -28,4 +28,4 @@ springdoc:
     path: /myapi.html
 
 jwt:
-  secret: B3UXT8oYarUt3WLfW7IRLf1L9ZdRGiXasDF0aBwftqMXM286aFJDrIRL8VwfNZkvxC+dEWhySn54Wce28g1t3Q==
+  secret: F3OoYV8ZzrZexBFMhOgmEk+A3Q0dWeRVJYmV33HZvIkcOtyX9ul1aV6RzB+VdmbwaMTAVDU+pB4xrt6pcY42jA==
